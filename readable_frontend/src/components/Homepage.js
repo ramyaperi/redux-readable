@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import {Grid,Row,Col,ButtonGroup,Button,Glyphicon} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import {fetchData ,postData,deleteData} from '../util/utils.js';
-import { Redirect } from 'react-router';
+
 
 //even a function will do but using component in case of future changes
 class Homepage extends Component {
@@ -59,7 +59,7 @@ class Homepage extends Component {
     }
     this.props.postData(`http://localhost:3001/posts/${id}`, POST_POSTS , data);
     this.props.posts.map((post)=> {
-      if(post.id==id){
+      if(post.id===id){
         post.voteScore++;
       }
     });
@@ -72,7 +72,7 @@ class Homepage extends Component {
     }
     this.props.postData(`http://localhost:3001/posts/${id}`, POST_POSTS , data);
     this.props.posts.map((post)=> {
-      if(post.id==id){
+      if(post.id===id){
         post.voteScore--;
       }
     });
@@ -99,7 +99,7 @@ class Homepage extends Component {
       return <p>Sorry! There was an error loading the items</p>;
       }
 
-      if (this.props.categoriesIsLoading) {
+      if (this.props.categoriesIsLoading ) {
         return <p>Loading…</p>;
         }
 

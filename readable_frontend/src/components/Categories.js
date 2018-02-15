@@ -7,15 +7,24 @@ import {fetchData } from '../util/utils.js';
 //even a function will do but using component in case of future changes
 class Categories extends Component {
  //const Categories = function(props)  {
+state = {};
 
  componentDidMount(){
         this.props.fetchData(`http://localhost:3001/${this.props.location.state.categorie}/posts`, FETCH_POSTS);
+        //this.setState(this.state);
      };
 
      render() {
+       if (this.props.postsHasErrored) {
+         return <p>Sorry! There was an error loading the items</p>;
+         }
+
+         if (this.props.postsIsLoading || this.props.posts===undefined) {
+           return <p>Loading…</p>;
+           }
+
     return (
       //const categorie = this.props.location.state.categorie,
-
     <div className="categories" >
       <h2>
         {this.props.location.state.categorie}
@@ -36,10 +45,9 @@ class Categories extends Component {
 
   const mapStateToProps = (state) => {
       return {
-
-          posts: state.posts,
-          postsIsLoading : state.postsIsLoading,
-          postsHasErrored : state.postsHasErrored,
+          posts: state.fetchData.posts,
+          postsIsLoading : state.fetchData.postsIsLoading,
+          postsHasErrored : state.fetchData.postsHasErrored,
         }
     };
 

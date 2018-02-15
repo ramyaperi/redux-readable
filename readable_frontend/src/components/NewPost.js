@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import {Grid,Row,Col,ButtonGroup,Button,Glyphicon} from 'react-bootstrap';
+import {Row,Button,Glyphicon} from 'react-bootstrap';
 import { POST_POSTS,FETCH_CATEGORIES} from '../actions';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router';
 import {fetchData,postData } from '../util/utils.js';
 
 

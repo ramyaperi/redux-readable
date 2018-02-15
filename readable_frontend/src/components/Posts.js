@@ -17,7 +17,7 @@ class Posts extends Component {
   };
 
   componentWillMount(){
-    if(this.props.location.state != undefined){
+    if(this.props.location.state !== undefined){
       this.setState({parentId:this.props.location.state.post.id ,
         editTitle:this.props.location.state.post.title,
         editPost:this.props.location.state.post.body,});
@@ -37,7 +37,7 @@ class Posts extends Component {
       }
       this.props.postData(`http://localhost:3001/comments/${id}`, POST_COMMENTS , data);
       this.props.comments.map((comment)=> {
-        if(comment.id==id){
+        if(comment.id===id){
           comment.voteScore++;
         }
       });
@@ -50,7 +50,7 @@ class Posts extends Component {
       }
       this.props.postData(`http://localhost:3001/comments/${id}`, POST_COMMENTS , data);
       this.props.comments.map((comment)=> {
-        if(comment.id==id){
+        if(comment.id===id){
           comment.voteScore--;
         }
       });
@@ -138,7 +138,7 @@ class Posts extends Component {
                         <Button  onClick={this.displayeditpost}>
                           <Glyphicon glyph="pencil"/>
                         </Button>
-                      
+
                       </ButtonGroup>
                     </Col>
 

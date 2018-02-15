@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from '../util/logo.svg';
 import '../util/App.css';
 import {Route,withRouter} from 'react-router-dom';
 import Categories from './Categories.js';
