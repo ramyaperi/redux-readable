@@ -96,6 +96,8 @@ class Homepage extends Component {
 
   }
 
+
+
   render() {
     //  console.log(this.state.posts)
     if (this.props.categoriesHasErrored) {
@@ -114,7 +116,7 @@ class Homepage extends Component {
         <Row>
           <Col md={4}></Col>
           <Col md={4}>
-            <Link to='/newPost'>New Post</Link>
+            <Link to={{pathname:`/newPost`, state:{categories: this.props.categories} }}>New Post</Link>
           </Col>
           <Col md={4}>
             <select onChange={this.sortPosts} value={this.state.sortKey}>
@@ -134,7 +136,7 @@ class Homepage extends Component {
               {
                 this.props.categories.map((categorie) => (<li key={categorie.path}>
                   <Link to={{
-                      pathname: `/byCategories/${categorie.name}`,
+                      pathname: `/${categorie.name}`,
                       state: {
                         categorie: categorie.name
                       }
@@ -156,12 +158,11 @@ class Homepage extends Component {
                   <Row>
                     <Col md={8}>
                       <Link to={{
-                          pathname: `/byPost/${post.id}`,
+                          pathname: `/${post.category}/${post.id}`,
                           state: {
                             post: post
                           }
                         }}>
-
                         <h3>{post.title}</h3>
                       </Link>
                     </Col>
@@ -174,6 +175,11 @@ class Homepage extends Component {
                     </Col>
                   </Row>
                   <div>{post.body}</div>
+                  <Row>
+                    <Col md={4}> </Col>
+                    <Col md={4}> Author : {post.author}</Col>
+                    <Col md={4}> Comments: {post.commentCount} </Col>
+                  </Row>
                   <div>votes: {post.voteScore}</div>
 
                   <Button onClick={() => this.upVote(post.id)}>

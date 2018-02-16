@@ -4,7 +4,7 @@ import {Route, withRouter} from 'react-router-dom';
 import Categories from './Categories.js';
 import Posts from './Posts'
 import Homepage from './Homepage.js';
-import NewPost from './NewPost.js';
+import NewPosts from './NewPost.js';
 import {Row, Col, Button, Glyphicon} from 'react-bootstrap';
 
 class App extends Component {
@@ -22,11 +22,11 @@ class App extends Component {
           </Button>
         </Col>
       </Row>
-      <Route exact="exact" path='/' render={() => (<Homepage/>)}/>
+      <Route exact path='/' render={() => (<Homepage/>)}/>
+      <Route exact path='/newPost' component={NewPosts}/>
+      <Route exact  path='/:categorie' component={Categories}/>
+      <Route exact  path='/:category/:postID' component={Posts}/>
 
-      <Route path='/byCategories/:categorie' component={Categories}/>
-      <Route path='/byPost/:postID' component={Posts}/>
-      <Route path='/newPost' render={() => (<NewPost/>)}/>
     </div>);
   }
 }

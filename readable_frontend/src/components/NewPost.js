@@ -12,13 +12,13 @@ class NewPosts extends Component {
       newPostTitle:"",
       newPostbody:"",
       newAuthor:"",
-      categorie:""
+      categorie:"udacity"
+
     }
-    componentDidMount(){
-           this.props.fetchData("http://localhost:3001/categories", FETCH_CATEGORIES);
-        };
+
     handleChange = (event) =>{
       this.setState({[event.target.name]:event.target.value});
+
     }
     postPost=(event)=>{
       event.preventDefault();
@@ -26,8 +26,9 @@ class NewPosts extends Component {
         title:this.state.newPostTitle,
         body:this.state.newPostbody,
         author:this.state.newAuthor,
-        category:this.state.categorie
+        category:this.state.categorie,
       }
+
       this.props.postData(`http://localhost:3001/posts`, POST_POSTS , data);
       //<Redirect to="/"/>
       window.location.href = "/";
@@ -46,9 +47,9 @@ render() {
             <h5>Author</h5>
       <input id="postAuthor" style={{ border:'solid 2px'}}  value={this.state.newAuthor} name="newAuthor" onChange={this.handleChange}></input>
       <h5>Categorie</h5>
-      <select style={{ border:'solid 2px'}} onChange={this.handleChange} >
-      {this.props.categories.map((categorie) => (
-        <option name="categorie" key={categorie.name} value={categorie.name}>{categorie.name}</option>
+      <select style={{ border:'solid 2px'}} name="categorie" onChange={this.handleChange} >
+      {this.props.location.state.categories.map((categorie) => (
+        <option name="categorie" key={categorie.name} value={categorie.name} selected>{categorie.name} </option>
       ))}
       </select>
     <Button type="submit" value="Submit" >

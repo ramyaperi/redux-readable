@@ -2,7 +2,10 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux'
 import {FETCH_POSTS} from '../actions';
 import {fetchData} from '../util/utils.js';
-
+import {
+  Row,
+  Col
+} from 'react-bootstrap';
 //even a function will do but using component in case of future changes
 class Categories extends Component {
   //const Categories = function(props)  {
@@ -33,6 +36,11 @@ class Categories extends Component {
           this.props.posts.map((post) => (<li key={post.id}>
             <h3>{post.title}</h3>
             <div>{post.body}</div>
+              <Row>
+                <Col md={4}> </Col>
+                <Col md={4}> Author : {post.author}</Col>
+                <Col md={4}> Comments: {post.commentCount} </Col>
+              </Row>
           </li>))
         }
       </ol>
