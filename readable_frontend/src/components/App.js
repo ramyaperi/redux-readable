@@ -1,13 +1,15 @@
 import React, {Component} from 'react';
 import '../util/App.css';
-import {Route, withRouter} from 'react-router-dom';
+import {Route, withRouter,Switch} from 'react-router-dom';
 import Categories from './Categories.js';
 import Posts from './Posts'
 import Homepage from './Homepage.js';
 import NewPosts from './NewPost.js';
+import NotFound from './NotFound';
 import {Row, Col, Button, Glyphicon} from 'react-bootstrap';
 
 class App extends Component {
+
 
   toHomepage() {
     window.location.href = "/";
@@ -22,11 +24,14 @@ class App extends Component {
           </Button>
         </Col>
       </Row>
+      <Switch>
       <Route exact path='/' render={() => (<Homepage/>)}/>
       <Route exact path='/newPost' component={NewPosts}/>
+      <Route exact path='/notfound' component={NotFound} />
       <Route exact  path='/:categorie' component={Categories}/>
       <Route exact  path='/:category/:postID' component={Posts}/>
-
+      <Route component={NotFound} />
+      </Switch>
     </div>);
   }
 }

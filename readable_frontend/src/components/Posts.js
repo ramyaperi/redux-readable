@@ -131,7 +131,10 @@ class Posts extends Component {
     if (this.props.commentsIsLoading || this.props.comments === undefined) {
       return <p>Loading…</p>;
     }
-
+    if(this.props.post.id === undefined){
+        return <p>Sorry! The post was not found/deleted </p>;
+    }
+   //console.log(this.props.post.id)
 
     return (<div className="posts">
       <Grid>
