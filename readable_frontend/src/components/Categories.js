@@ -12,7 +12,7 @@ class Categories extends Component {
   state = {};
 
   componentDidMount() {
-    this.props.fetchData(`http://localhost:3001/${this.props.location.state.categorie}/posts`, FETCH_POSTS);
+    this.props.fetchData(`http://localhost:3001/${this.props.match.params.categorie}/posts`, FETCH_POSTS);
     //this.setState(this.state);
   };
 

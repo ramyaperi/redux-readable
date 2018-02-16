@@ -23,17 +23,11 @@ class Posts extends Component {
     editPost: ""
   };
 
-  componentWillMount() {
-    if (this.props.location.state !== undefined) {
-      this.setState({parentId: this.props.location.state.post.id, editTitle: this.props.location.state.post.title, editPost: this.props.location.state.post.body});
-    }
-  }
-
   componentDidMount() {
-    console.log(this.state.parentId);
-    this.props.fetchData(`http://localhost:3001/posts/${this.state.parentId}`, FETCH_POSTS);
-    this.props.fetchData(`http://localhost:3001/posts/${this.state.parentId}/comments`, FETCH_COMMENTS);
-
+    console.log(this.props.match.params.postID);
+    this.props.fetchData(`http://localhost:3001/posts/${this.props.match.params.postID}`, FETCH_POSTS);
+    this.props.fetchData(`http://localhost:3001/posts/${this.props.match.params.postID}/comments`, FETCH_COMMENTS);
+    this.setState({parentId: this.props.match.params.postID});
   };
   upVote(id) {
     //event.preventDefault();
@@ -120,6 +114,12 @@ class Posts extends Component {
 
     this.setState({newComment: "", newAuthor: ""});
   }
+  deletePost = () => {
+      this.props.deleteData(`http://localhost:3001/posts/${this.state.parentId}`, POST_POSTS);
+      //this.props.fetchData("http://localhost:3001/posts", FETCH_POSTS);
+      //this.setState(this.state);
+      window.location.href = "/";
+    }
   render() {
     const {post, comments} = this.props;
     if (this.props.commentsHasErrored) {
@@ -130,7 +130,7 @@ class Posts extends Component {
       return <p>Loading…</p>;
     }
 
-    console.log(this.state.editTitle)
+
     return (<div className="posts">
       <Grid>
         <Row>
@@ -141,10 +141,13 @@ class Posts extends Component {
           </Col>
           <Col md={2}>
             <ButtonGroup>
+
               <Button onClick={this.displayeditpost}>
                 <Glyphicon glyph="pencil"/>
               </Button>
-
+              <Button onClick={this.deletePost}>
+                <Glyphicon glyph="trash"/>
+              </Button>
             </ButtonGroup>
           </Col>
 
@@ -157,9 +160,10 @@ class Posts extends Component {
         </Row>
         <div></div>
         <Row>
-          <Col md={4}>Author : {post.author}</Col>
-          <Col md={4}>Time : {post.timestamp}</Col>
-          <Col md={4}>Votes: {post.voteScore}</Col>
+          <Col md={3}>Author : {post.author}</Col>
+          <Col md={3}>Time : {post.timestamp}</Col>
+          <Col md={3}>Votes: {post.voteScore}</Col>
+          <Col md={3}>Comments: {post.commentCount}</Col>
         </Row>
 
         <div style={{

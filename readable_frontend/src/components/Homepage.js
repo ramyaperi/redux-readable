@@ -10,7 +10,7 @@ import {
   Glyphicon
 } from 'react-bootstrap';
 import {Link} from 'react-router-dom';
-import {fetchData, postData, deleteData} from '../util/utils.js';
+import {fetchData, postData,putData, deleteData} from '../util/utils.js';
 
 //even a function will do but using component in case of future changes
 class Homepage extends Component {
@@ -19,8 +19,12 @@ class Homepage extends Component {
     sortKey: "voteScore",
     sortKind: "desc",
     posts: this.props.posts,
-    refresh: ""
+    refresh: "",
+    displayeditpost: "none",
+    editTitle: "",
+    editPost: ""
   };
+
 
   componentDidMount() {
     this.props.fetchData("http://localhost:3001/categories", FETCH_CATEGORIES);
@@ -59,6 +63,38 @@ class Homepage extends Component {
     this.props.fetchData("http://localhost:3001/posts", FETCH_POSTS);
     this.setState(this.state);
   }
+  displayeditpost = (id) => {
+    this.props.posts.map((post) => {
+      if(post.id === id){
+        this.setState({
+          editTitle:post.title,
+          editPost:post.body,
+          displayeditpost: "block"});
+      }
+    })
+
+  }
+
+  editPost = (id) => {
+
+    var data = {
+      "title": this.state.editTitle,
+      "body": this.state.editPost
+    }
+    this.props.putData(`http://localhost:3001/posts/${id}`, POST_POSTS, data);
+
+    //this.props.post.title = this.state.editTitle;
+    //this.props.post.body = this.state.editPost;
+    this.props.posts.map((post) => {
+      if(post.id === id){
+        post.title = this.state.editTitle;
+        post.body = this.state.editPost;
+      }
+    });
+    this.setState({displayeditpost: "none"});
+
+  }
+
   upVote(id) {
     //event.preventDefault();
     var data = {
@@ -95,7 +131,12 @@ class Homepage extends Component {
     this.setState({sortKey, sortKind, posts});
 
   }
-
+  handleChange = (event) => {
+    //console.log([event.target.name] : event.target.value)
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  }
 
 
   render() {
@@ -168,6 +209,9 @@ class Homepage extends Component {
                     </Col>
                     <Col md={2}>
                       <ButtonGroup>
+                        <Button onClick={() => this.displayeditpost(post.id)}>
+                          <Glyphicon glyph="pencil"/>
+                        </Button>
                         <Button onClick={() => this.deletePost(post.id)}>
                           <Glyphicon glyph="trash"/>
                         </Button>
@@ -181,7 +225,26 @@ class Homepage extends Component {
                     <Col md={4}> Comments: {post.commentCount} </Col>
                   </Row>
                   <div>votes: {post.voteScore}</div>
+                    <div style={{
+                        display: this.state.displayeditpost
+                      }}>
+                      <Row>
+                        <h5>title</h5>
+                        <input id="postTitle" style={{
+                            border: 'solid 2px'
+                          }} value={this.state.editTitle} name="editTitle" onChange={this.handleChange}></input>
+                      </Row>
+                      <Row>
+                        <h5>post</h5>
+                        <textarea id="postBody" rows="4" cols="50" style={{
+                            border: 'solid 2px'
+                          }} value={this.state.editPost} name="editPost" onChange={this.handleChange}></textarea>
 
+                        <Button type="submit" value="Submit" onClick={()=>this.editPost(post.id)}>
+                          <Glyphicon glyph="save"/>
+                        </Button>
+                      </Row>
+                    </div>
                   <Button onClick={() => this.upVote(post.id)}>
                     <Glyphicon glyph="thumbs-up"/>
                   </Button>
@@ -218,7 +281,8 @@ const mapDispatchToProps = (dispatch) => {
     fetchData: (url, datatype) => dispatch(fetchData(url, datatype)),
     //fetchposts: (url) => dispatch(fetchData(url))
     postData: (url, datatype, data) => dispatch(postData(url, datatype, data)),
-    deleteData: (url, datatype) => dispatch(deleteData(url, datatype))
+    deleteData: (url, datatype) => dispatch(deleteData(url, datatype)),
+    putData: (url, datatype, data) => dispatch(putData(url, datatype, data)),
   };
 };
 
