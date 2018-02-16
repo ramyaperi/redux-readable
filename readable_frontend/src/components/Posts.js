@@ -57,7 +57,9 @@ class Posts extends Component {
 
   }
   displayeditpost = () => {
-    this.setState({displayeditpost: "block"});
+    this.setState({displayeditpost: "block",
+    editTitle: this.props.post.title,
+    editPost: this.props.post.body });
   }
 
   editPost = () => {
