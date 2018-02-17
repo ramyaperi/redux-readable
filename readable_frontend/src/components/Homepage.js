@@ -127,8 +127,9 @@ class Homepage extends Component {
     var posts = this.props.posts,
       posts = posts.sort(this.compareValues(sortKey, sortKind));
 
-    console.log(sortKey, sortKind, posts);
-    this.setState({sortKey, sortKind, posts});
+    //console.log(sortKey, sortKind, posts);
+    this.setState({
+      sortKey:sortKey, sortKind:sortKind, posts:posts});
 
   }
   handleChange = (event) => {
@@ -160,7 +161,7 @@ class Homepage extends Component {
             <Link to={{pathname:`/newPost`, state:{categories: this.props.categories} }}>New Post</Link>
           </Col>
           <Col md={4}>
-            <select onChange={this.sortPosts} value={this.state.sortKey}>
+            <select onChange={this.sortPosts} >
               <option value="voteScore,asc">voteScore Ascending</option>
               <option value="voteScore,desc">voteScore Descending</option>
               <option value="timestamp,asc">Time Ascending</option>

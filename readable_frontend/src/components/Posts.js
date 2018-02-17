@@ -122,6 +122,23 @@ class Posts extends Component {
       //this.setState(this.state);
       window.location.href = "/";
     }
+upVotePost = () => {
+  var data = {
+    "option": "upVote"
+  }
+  this.props.postData(`http://localhost:3001/posts/${this.state.parentId}`, POST_POSTS, data);
+  this.props.post.voteScore++;
+  this.setState(this.state);
+}
+downVotePost = () => {
+  var data = {
+    "option": "downVote"
+  }
+  this.props.postData(`http://localhost:3001/posts/${this.state.parentId}`, POST_POSTS, data);
+  this.props.post.voteScore--;
+  this.setState(this.state);
+}
+
   render() {
     const {post, comments} = this.props;
     if (this.props.commentsHasErrored) {
@@ -169,6 +186,14 @@ class Posts extends Component {
           <Col md={3}>Time : {post.timestamp}</Col>
           <Col md={3}>Votes: {post.voteScore}</Col>
           <Col md={3}>Comments: {post.commentCount}</Col>
+        </Row>
+        <Row>
+          <Button onClick={() => this.upVotePost()}>
+            <Glyphicon glyph="thumbs-up"/>
+          </Button>
+          <Button onClick={() => this.downVotePost()}>
+            <Glyphicon glyph="thumbs-down"/>
+          </Button>
         </Row>
 
         <div style={{
