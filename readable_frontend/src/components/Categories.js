@@ -6,15 +6,29 @@ import {
   Row,
   Col
 } from 'react-bootstrap';
-//even a function will do but using component in case of future changes
+import Sort from './SortPosts.js';
+import CategorieList from './CategorieList.js';
+
 class Categories extends Component {
   //const Categories = function(props)  {
   state = {};
 
+  componentWillReceiveProps(nextProps)
+  {
+    if(this.props.match.params.categorie !== nextProps.match.params.categorie){
+      this.props.fetchData(`http://localhost:3001/${nextProps.match.params.categorie}/posts`, FETCH_POSTS);
+    }
+  }
   componentDidMount() {
     this.props.fetchData(`http://localhost:3001/${this.props.match.params.categorie}/posts`, FETCH_POSTS);
     //this.setState(this.state);
   };
+
+  setSortedPosts= (data) =>{
+    //this.props.posts =  data.posts;
+    this.setState({
+      sortKey:data.sortKey, sortKind:data.sortKind, posts:data.posts});
+   }
 
   render() {
     if (this.props.postsHasErrored) {
@@ -28,9 +42,11 @@ class Categories extends Component {
     return (
     //const categorie = this.props.location.state.categorie,
     <div className="categories">
+      <CategorieList/>
       <h2>
         {this.props.location.state.categorie}
       </h2>
+      <Sort posts={this.props.posts} setSortedPosts={this.setSortedPosts}/>
       <ol>
         {
           this.props.posts.map((post) => (<li key={post.id}>

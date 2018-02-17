@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {FETCH_CATEGORIES, FETCH_POSTS, POST_POSTS} from '../actions';
+import {FETCH_POSTS, POST_POSTS} from '../actions';
 import {connect} from 'react-redux'
 import {
   Grid,
@@ -11,52 +11,27 @@ import {
 } from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import {fetchData, postData,putData, deleteData} from '../util/utils.js';
-
+import Sort from './SortPosts.js';
+import CategorieList from './CategorieList.js';
 //even a function will do but using component in case of future changes
 class Homepage extends Component {
 
   state = {
-    sortKey: "voteScore",
-    sortKind: "desc",
     posts: this.props.posts,
     refresh: "",
     displayeditpost: "none",
     editTitle: "",
-    editPost: ""
+    editPost: "",
+    sortKey:"",
+    sortKind:"",
   };
 
 
   componentDidMount() {
-    this.props.fetchData("http://localhost:3001/categories", FETCH_CATEGORIES);
+    //this.props.fetchData("http://localhost:3001/categories", FETCH_CATEGORIES);
     this.props.fetchData("http://localhost:3001/posts", FETCH_POSTS);
   };
 
-  compareValues = (key, order = 'asc') => {
-    return function(a, b) {
-      if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
-        // property doesn't exist on either object
-        return 0;
-      }
-
-      const varA = (typeof a[key] === 'string')
-        ? a[key].toUpperCase()
-        : a[key];
-      const varB = (typeof b[key] === 'string')
-        ? b[key].toUpperCase()
-        : b[key];
-
-      let comparison = 0;
-      if (varA > varB) {
-        comparison = 1;
-      } else if (varA < varB) {
-        comparison = -1;
-      }
-      return (
-        (order === 'desc')
-        ? (comparison * -1)
-        : comparison);
-    };
-  }
 
   deletePost = (id) => {
     this.props.deleteData(`http://localhost:3001/posts/${id}`, POST_POSTS);
@@ -122,16 +97,7 @@ class Homepage extends Component {
     this.setState(this.state);
 
   }
-  sortPosts = (event) => {
-    var [sortKey, sortKind] = event.target.value.split(',');
-    var posts = this.props.posts,
-      posts = posts.sort(this.compareValues(sortKey, sortKind));
 
-    //console.log(sortKey, sortKind, posts);
-    this.setState({
-      sortKey:sortKey, sortKind:sortKind, posts:posts});
-
-  }
   handleChange = (event) => {
     //console.log([event.target.name] : event.target.value)
     this.setState({
@@ -139,16 +105,14 @@ class Homepage extends Component {
     });
   }
 
+  setSortedPosts= (data) =>{
+    //this.props.posts =  data.posts;
+    this.setState({
+      sortKey:data.sortKey, sortKind:data.sortKind, posts:data.posts});
+   }
 
   render() {
     //  console.log(this.state.posts)
-    if (this.props.categoriesHasErrored) {
-      return <p>Sorry! There was an error loading the items</p>;
-    }
-
-    if (this.props.categoriesIsLoading) {
-      return <p>Loading…</p>;
-    }
 
     return (
     //console.log(this.props.categories),
@@ -161,35 +125,11 @@ class Homepage extends Component {
             <Link to={{pathname:`/newPost`, state:{categories: this.props.categories} }}>New Post</Link>
           </Col>
           <Col md={4}>
-            <select onChange={this.sortPosts} >
-              <option value="voteScore,asc">voteScore Ascending</option>
-              <option value="voteScore,desc">voteScore Descending</option>
-              <option value="timestamp,asc">Time Ascending</option>
-              <option value="timestamp,desc">Time Descending</option>
-            </select>
+          <Sort posts={this.props.posts} setSortedPosts={this.setSortedPosts}/>
           </Col>
         </Row>
         <Row className="show-grid">
-          <Col md={2} className="categories col-3">
-            <h2>
-              <u>Categories</u>
-            </h2>
-            <ol>
-              {
-                this.props.categories.map((categorie) => (<li key={categorie.path}>
-                  <Link to={{
-                      pathname: `/${categorie.name}`,
-                      state: {
-                        categorie: categorie.name
-                      }
-                    }}>
-                    <h3>{categorie.name}
-                    </h3>
-                  </Link>
-                </li>))
-              }
-            </ol>
-          </Col>
+          <CategorieList/>
           <Col className="posts">
             <h2>
               <u>Posts</u>
